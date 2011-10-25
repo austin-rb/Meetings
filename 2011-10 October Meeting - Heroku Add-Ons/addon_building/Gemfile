@@ -1,0 +1,4 @@
+source :gemcutter
+gem 'showoff'
+gem 'heroku', :require => false
+gem 'thin'
