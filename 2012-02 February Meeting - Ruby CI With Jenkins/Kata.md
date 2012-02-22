@@ -46,11 +46,12 @@ introduce complexity.
 
 However, the twist becomes apparent when you sit down and work out how
 much you think the sample basket above should cost. It isn’t
-  5*8*0.75+3*8*0.90.
+
+    5*8*0.75+3*8*0.90.
 
 It is in fact
 
-  4*8*0.8+4*8*0.8.
+    4*8*0.8+4*8*0.8.
 
 So the trick with this Kata is not that the acceptance test you’ve been given
 is wrong. The trick is that you have to write some code that is intelligent enough
