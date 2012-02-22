@@ -28,11 +28,11 @@ giving as big a discount as possible.
 
 Example: how much does this basket of books cost?
 
-* 2 copies of the first book
-* 2 copies of the second book
-* 2 copies of the third book
-* 1 copy of the fourth book
-* 1 copy of the fifth book
+    2 copies of the first book
+    2 copies of the second book
+    2 copies of the third book
+    1 copy of the fourth book
+    1 copy of the fifth book
 
 Answer: $51.20
 
@@ -45,13 +45,15 @@ books… and it is not too difficult to work in small steps and gradually
 introduce complexity.
 
 However, the twist becomes apparent when you sit down and work out how
-much you think the sample basket above should cost. It isn’t
+much you think the sample basket above should cost.
 
-    5*8*0.75+3*8*0.90.
+It isn’t
+
+    5*8*0.75+3*8*0.90
 
 It is in fact
 
-    4*8*0.8+4*8*0.8.
+    4*8*0.8+4*8*0.8
 
 So the trick with this Kata is not that the acceptance test you’ve been given
 is wrong. The trick is that you have to write some code that is intelligent enough
