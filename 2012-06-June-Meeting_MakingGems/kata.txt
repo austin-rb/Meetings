@@ -1,71 +1,39 @@
-http://codekata.pragprog.com/2007/01/kata_nine_back_.html
+﻿kata from: http://codingdojo.org/cgi-bin/wiki.pl?KataBowling
 
-Kata Nine: Back to the CheckOut
-Back to the supermarket. This week, we’ll implement the code for a checkout system that handles pricing schemes such as "apples cost 50 cents, three apples cost $1.30."
+This description is based on that at www.xprogramming.com/xpmag/acsBowling.htm
+Problem Description
 
-Way back in KataOne we thought about how to model the various options for supermarket pricing. We looked at things such as "three for a dollar," "$1.99 per pound," and "buy two, get one free."
+Create a program, which, given a valid sequence of rolls for one line of American Ten-Pin Bowling, produces the total score for the game. Here are some things that the program will not do:
 
-This week, let’s implement the code for a supermarket checkout that calculates the total price of a number of items. In a normal supermarket, things are identified using Stock Keeping Units, or SKUs. In our store, we’ll use individual letters of the alphabet (A, B, C, and so on). Our goods are priced individually. In addition, some items are multipriced: buy n of them, and they’ll cost you y cents. For example, item ‘A’ might cost 50 cents individually, but this week we have a special offer: buy three ‘A’s and they’ll cost you $1.30. In fact this week’s prices are:
+We will not check for valid rolls.
+We will not check for correct number of rolls and frames.
+We will not provide scores for intermediate frames.
+Depending on the application, this might or might not be a valid way to define a complete story, but we do it here for purposes of keeping the kata light. I think you'll see that improvements like those above would go in readily if they were needed for real.
 
-  Item   Unit      Special
-         Price     Price
-  --------------------------
-    A     50       3 for 130
-    B     30       2 for 45
-    C     20
-    D     15
+We can briefly summarize the scoring for this form of bowling:
 
-Our checkout accepts items in any order, so that if we scan a B, an A, and another B, we’ll recognize the two B’s and price them at 45 (for a total price so far of 95). Because the pricing changes frequently, we need to be able to pass in a set of pricing rules each time we start handling a checkout transaction.
+Each game, or "line" of bowling, includes ten turns, or "frames" for the bowler.
+In each frame, the bowler gets up to two tries to knock down all the pins.
+If in two tries, he fails to knock them all down, his score for that frame is the total number of pins knocked down in his two tries.
+If in two tries he knocks them all down, this is called a "spare" and his score for the frame is ten plus the number of pins knocked down on his next throw (in his next turn).
+If on his first try in the frame he knocks down all the pins, this is called a "strike". His turn is over, and his score for the frame is ten plus the simple total of the pins knocked down in his next two rolls.
+If he gets a spare or strike in the last (tenth) frame, the bowler gets to throw one or two more bonus balls, respectively. These bonus throws are taken as part of the same turn. If the bonus throws knock down all the pins, the process does not repeat: the bonus throws are only used to calculate the score of the final frame.
+The game score is the total of all frame scores.
+More info on the rules at: www.topendsports.com/sport/tenpin/scoring.htm
 
-The interface to the checkout should look like:
+Clues
 
-   co = CheckOut.new(pricing_rules)
-   co.scan(item)
-   co.scan(item)
-       :    :
-   price = co.total
+What makes this game interesting to score is the lookahead in the scoring for strike and spare. At the time we throw a strike or spare, we cannot calculate the frame score: we have to wait one or two frames to find out what the bonus is.
 
-Here’s a set of unit tests for a Ruby implementation. The helper method price lets you specify a sequence of items using a string, calling the checkout’s scan method on each item in turn before finally returning the total price.
+Suggested Test Cases
 
-  class TestPrice < Test::Unit::TestCase
+(When scoring "X" indicates a strike, "/" indicates a spare, "-" indicates a miss)
 
-    def price(goods)
-      co = CheckOut.new(RULES)
-      goods.split(//).each { |item| co.scan(item) }
-      co.total
-    end
+"XXXXXXXXXXXX" (12 rolls: 12 strikes) = 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 + 10+10+10 = 300
+"9-9-9-9-9-9-9-9-9-9-" (20 rolls: 10 pairs of 9 and miss) = 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9 = 90
+"5/5/5/5/5/5/5/5/5/5/5" (21 rolls: 10 pairs of 5 and spare, with a final 5) = 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 + 10+5 = 150
+Comments from those who have mastered this Kata
 
-    def test_totals
-      assert_equal(  0, price(""))
-      assert_equal( 50, price("A"))
-      assert_equal( 80, price("AB"))
-      assert_equal(115, price("CDBA"))
+Write some thoughts here about what you have learnt from this Kata. You don't have to post all the code of your solution - I think the solution in itself is less interesting than the path you took to get there and what decisions you made. Just seeing the code won't necessarily help me to reproduce it for myself. So in this section various people might go through the main parts of the problem and how they tackled them, what design ideas were discarded, and which order the test cases were implemented in.
 
-      assert_equal(100, price("AA"))
-      assert_equal(130, price("AAA"))
-      assert_equal(180, price("AAAA"))
-      assert_equal(230, price("AAAAA"))
-      assert_equal(260, price("AAAAAA"))
-
-      assert_equal(160, price("AAAB"))
-      assert_equal(175, price("AAABB"))
-      assert_equal(190, price("AAABBD"))
-      assert_equal(190, price("DABABA"))
-    end
-
-    def test_incremental
-      co = CheckOut.new(RULES)
-      assert_equal(  0, co.total)
-      co.scan("A");  assert_equal( 50, co.total)
-      co.scan("B");  assert_equal( 80, co.total)
-      co.scan("A");  assert_equal(130, co.total)
-      co.scan("A");  assert_equal(160, co.total)
-      co.scan("B");  assert_equal(175, co.total)
-    end
-  end
-
-There are lots of ways of implementing this kind of algorithm; if you have time, experiment with several.
-
-Objectives of the Kata
-
-To some extent, this is just a fun little problem. But underneath the covers, it’s a stealth exercise in decoupling. The challenge description doesn’t mention the format of the pricing rules. How can these be specified in such a way that the checkout doesn’t know about particular items and their pricing strategies? How can we make the design flexible enough so that we can add new styles of pricing rule in the future?
+One interesting point to note is that without counting frames in any way (although I don't think this was intended as a 'hard' requirement for the initial Kata completion), finding an elegant way to identify the end of the game/last "real" frame becomes difficult (ie: assuming there are final 'bonus' rolls included in a given test case). Update: After trying various things, including writing out a logic matrix for possible end-of-game combinations, I'm not sure it's possible to detect whether a final 'throw' counts as bonus-only or as part of an actual frame, unless you're counting frames. -- RudyXDesjardins
