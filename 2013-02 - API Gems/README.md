@@ -26,4 +26,4 @@ output could be:
 
 ## Bonus Tasks
 
- * Change the behavior of the enqueuer or the threads by trapping system signals
+ * Change the behavior of the enqueuer or the threads by trapping signals
