@@ -1,6 +1,6 @@
 # Talk: Creating API Client Gems - Ben Hamill
 
-Ben regails us with tales of crafting an API client gem in Ruby.
+Ben regails us with tales of crafting an API client gem in Ruby. [Slides](http://bdh-api-slides.herokuapp.com/#1)
 
 # Kata: Queue & Threads
 
