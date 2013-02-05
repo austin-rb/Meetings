@@ -1,5 +1,6 @@
 # Talk: Creating API Client Gems - Ben Hamill
 
+Ben regails us with tales of crafting an API client gem in Ruby.
 
 # Kata: Queue & Threads
 
